@@ -1,6 +1,6 @@
 from copy import Error
 from pathlib import Path
-from os import makedirs
+from os import makedirs,path
 from time import time
 import ffmpy
 
@@ -28,7 +28,8 @@ class FTransform():
             outfilename = '{name}_{t}.mp3'.format(name=name,t=time())
             f = ffmpy.FFmpeg(inputs={filename: None},outputs={outfilename: None})
             f.run()
-            return (self.outputDir.joinpath(outfilename), outfilename)
+            
+            return (self.outputDir.joinpath(outfilename), path.basename(outfilename))
         except BaseException as err:
             print('err', err)
             return None
