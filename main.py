@@ -1,9 +1,12 @@
-from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
+import os
+from fastapi import FastAPI,File,UploadFile
+from fastapi.responses import ORJSONResponse, FileResponse, StreamingResponse
 from datetime import datetime
+import tempfile
+from utils.transform import FTransform
 
 app = FastAPI()
-
+transform = FTransform()
 class Time():
     time = ''
     def __init__(self, time: str):
@@ -14,6 +17,18 @@ def root_get():
     return {
         'message': 'hello world!'
     }
+
+@app.post('/mp4-to-mp3')
+def mp42mp3(file: UploadFile=File(...)):
+    temp_dir = tempfile.mktemp()
+    temp_file = os.path.join(temp_dir, file.filename)
+    os.mkdir(temp_dir)
+    with open(temp_file, 'wb') as f:
+        f.write(file.file.read())
+    
+    (abs_path,filename) = transform.mp42mp3(temp_file)
+    return FileResponse(path=abs_path,filename=filename)
+    
 
 @app.get('/time')
 def time_get():
