@@ -18,8 +18,8 @@ def root_get():
         'message': 'hello world!'
     }
 
-@app.post('/mp4-to-mp3')
-def mp42mp3(file: UploadFile=File(...)):
+@app.post('/mp4_mp3')
+def mp4_mp3(file: UploadFile=File(...)):
     temp_dir = tempfile.mktemp()
     temp_file = os.path.join(temp_dir, file.filename)
     os.mkdir(temp_dir)
