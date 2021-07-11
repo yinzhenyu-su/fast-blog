@@ -27,7 +27,7 @@ def mp42mp3(file: UploadFile=File(...)):
         f.write(file.file.read())
     
     (abs_path,filename) = transform.mp42mp3(temp_file)
-    return FileResponse(path=abs_path,filename=filename)
+    return FileResponse(path=abs_path,filename=filename, headers={'keep-alive': 'timeout=120'})
     
 
 @app.get('/time')
@@ -36,4 +36,4 @@ def time_get():
 
 if __name__=='__main__':
     import uvicorn
-    uvicorn.run(app,host="localhost",port=8000)
+    uvicorn.run(app,host="0.0.0.0",port=8000)
