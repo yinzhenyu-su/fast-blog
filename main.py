@@ -31,10 +31,10 @@ def mp4tomp3(file: UploadFile=File(...)):
     temp_file = os.path.join(temp_dir, file.filename)
     with open(temp_file, 'wb') as f:
         f.write(file.file.read())
-    (abs_path, filename) = transform.mp42mp3(temp_file)
-    return JSONResponse({
-        'file': filename
-    })
+        (abs_path, filename) = transform.mp42mp3(temp_file)
+        return JSONResponse({
+            'file': filename
+        })
 
 @app.get('/tempfile/')
 def tempfile(filename: Optional[str] = None):
