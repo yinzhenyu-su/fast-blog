@@ -19,17 +19,10 @@ class FTransform():
     def mp42mp3(self, filename: str,) -> str:
         # if(isinstance(filename, str)):
         extIdx = filename.rfind('.')
-        if (extIdx > -1):
-            ext = filename[extIdx:]
-            name = filename.split(ext)[0]
-        else:
-            name = filename
-        try:
-            outfilename = '{name}_{t}.mp3'.format(name=name,t=time())
-            f = ffmpy.FFmpeg(inputs={filename: None},outputs={outfilename: None})
-            f.run()
-            
-            return (self.outputDir.joinpath(outfilename), path.basename(outfilename))
-        except BaseException as err:
-            print('err', err)
-            return None
+        ext = filename[extIdx:]
+        name = filename.split(ext)[0]
+        outfilename = '{name}_{t}.mp3'.format(name=name,t=time())
+        f = ffmpy.FFmpeg(inputs={filename: None},outputs={outfilename: None})
+        [out, err] = f.run()
+        print(out)
+        return (self.outputDir.joinpath(outfilename), path.basename(outfilename))

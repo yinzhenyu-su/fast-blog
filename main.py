@@ -26,15 +26,15 @@ def root_get():
         'message': 'hello world!'
     }
 
-@app.post('/mp4tomp3/')
+@app.post('/mp4tomp3/', response_class=JSONResponse)
 def mp4tomp3(file: UploadFile=File(...)):
     temp_file = os.path.join(temp_dir, file.filename)
-    with open(temp_file, 'wb') as f:
-        f.write(file.file.read())
-        (abs_path, filename) = transform.mp42mp3(temp_file)
-        return JSONResponse({
-            'file': filename
-        })
+    f = open(temp_file, 'wb')
+    f.write(file.file.read())
+    (abs_path, filename) = transform.mp42mp3(temp_file)
+    return JSONResponse({
+        'file': filename
+    })
 
 @app.get('/tempfile/')
 def tempfile(filename: Optional[str] = None):
