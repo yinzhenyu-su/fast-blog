@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI,File,UploadFile
-from fastapi.responses import ORJSONResponse, FileResponse, StreamingResponse
+from fastapi.responses import JSONResponse, FileResponse
 from datetime import datetime
 import tempfile
 from utils.transform import FTransform
@@ -32,7 +32,7 @@ def mp42mp3(file: UploadFile=File(...)):
 
 @app.get('/time')
 def time_get():
-    return ORJSONResponse(Time(datetime.now().strftime('%Y-%m-%d %H:%M:%S %f')).__dict__)
+    return JSONResponse(Time(datetime.now().strftime('%Y-%m-%d %H:%M:%S %f')).__dict__)
 
 if __name__=='__main__':
     import uvicorn
