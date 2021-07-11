@@ -32,6 +32,3 @@ class FTransform():
         except BaseException as err:
             print('err', err)
             return None
-
-file = FTransform().mp42mp3('test.mp4')
-print(file)
