@@ -3,6 +3,7 @@ from fastapi import FastAPI,File,UploadFile
 from fastapi.responses import JSONResponse, FileResponse
 from datetime import datetime
 import tempfile
+
 from utils.transform import FTransform
 
 app = FastAPI()
@@ -26,9 +27,8 @@ def mp4tomp3(file: UploadFile=File(...)):
     with open(temp_file, 'wb') as f:
         f.write(file.file.read())
     
-    (abs_path,filename) = transform.mp42mp3(temp_file)
-    return FileResponse(path=abs_path,filename=filename, headers={'keep-alive': 'timeout=120'})
-    
+    (abs_path, filename) = transform.mp42mp3(temp_file)
+    return FileResponse(path=abs_path, filename=filename, media_type='audio/mpeg')
 
 @app.get('/time')
 def time_get():
