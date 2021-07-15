@@ -15,7 +15,7 @@ class FTransform():
         if (not self.outputDir.exists()):
             makedirs(self.outputDir)
 
-    def mp42mp3(self, filename: str,) -> str:
+    def video2mp3(self, filename: str,) -> str:
         # if(isinstance(filename, str)):
         extIdx = filename.rfind('.')
         ext = filename[extIdx:]

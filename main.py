@@ -28,12 +28,12 @@ def root_get():
     return {'message': 'hello world!'}
 
 
-@app.post('/mp4tomp3/', response_class=JSONResponse)
-def mp4tomp3(file: UploadFile = File(...)):
+@app.post('/video2mp3/', response_class=JSONResponse)
+def video2mp3(file: UploadFile = File(...)):
     temp_file = os.path.join(temp_dir, file.filename)
     f = open(temp_file, 'wb')
     f.write(file.file.read())
-    filename = transform.mp42mp3(temp_file)
+    filename = transform.video2mp3(temp_file)
     if filename is not None:
         return JSONResponse({'file': filename})
     return JSONResponse({'message': 'transform video error'}, status_code=500)
