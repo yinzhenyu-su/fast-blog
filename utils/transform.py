@@ -1,15 +1,14 @@
-from copy import Error
 from pathlib import Path
-from os import makedirs,path
+from os import makedirs, path
 from time import time
 import ffmpy
-
 
 
 class FTransform():
     """
         使用ffmpeg进行视频加工转换的类
     """
+
     def __init__(self, outputDir=".") -> None:
         self.outputDir = Path(outputDir).absolute()
         # print(self.outputDir.joinpath('test.aac'))
@@ -21,8 +20,9 @@ class FTransform():
         extIdx = filename.rfind('.')
         ext = filename[extIdx:]
         name = filename.split(ext)[0]
-        outfilename = '{name}_{t}.mp3'.format(name=name,t=time())
-        f = ffmpy.FFmpeg(inputs={filename: None},outputs={outfilename: None})
+        outfilename = '{name}_{t}.mp3'.format(name=name, t=time())
+        f = ffmpy.FFmpeg(inputs={filename: None}, outputs={outfilename: None})
         [out, err] = f.run()
-        print(out)
-        return (self.outputDir.joinpath(outfilename), path.basename(outfilename))
+        if err:
+            return None
+        return path.basename(outfilename)
