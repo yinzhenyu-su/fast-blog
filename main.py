@@ -29,7 +29,7 @@ def root_get():
 
 
 @app.post('/video2mp3/', response_class=JSONResponse)
-def video2mp3(file: UploadFile = File(...)):
+async def video2mp3(file: UploadFile = File(...)):
     temp_file = os.path.join(temp_dir, file.filename)
     f = open(temp_file, 'wb')
     f.write(file.file.read())
@@ -40,7 +40,7 @@ def video2mp3(file: UploadFile = File(...)):
 
 
 @app.get('/tempfile/')
-def tempfile(filename: Optional[str] = None):
+async def tempfile(filename: Optional[str] = None):
     file_path = pathlib.Path(temp_dir, filename)
     if filename:
         if os.path.exists(file_path):
