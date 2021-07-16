@@ -40,13 +40,12 @@ async def video2mp3(file: UploadFile = File(...)):
 
 
 @app.get('/tempfile/')
-async def tempfile(filename: Optional[str] = None):
+async def tempfile(filename: str):
     file_path = pathlib.Path(temp_dir, filename)
-    if filename:
-        if os.path.exists(file_path):
-            file = open(file_path, 'rb')
-            return StreamingResponse(file, media_type='audio/mpeg')
-        return JSONResponse({'message': 'file not exists.'}, status_code=404)
+    if os.path.exists(file_path):
+        file = open(file_path, 'rb')
+        return StreamingResponse(file, media_type='audio/mpeg')
+    return JSONResponse({'message': 'file not exists.'}, status_code=404)
 
 
 @app.get('/time/')
