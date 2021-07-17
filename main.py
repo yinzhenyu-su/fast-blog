@@ -2,6 +2,7 @@ import os
 import pathlib
 from typing import Optional
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from datetime import datetime
 import tempfile
@@ -15,6 +16,17 @@ transform = FTransform()
 temp_dir = tempfile.mktemp()
 os.mkdir(temp_dir)
 
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Time():
     time = ''
