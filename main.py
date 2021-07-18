@@ -1,3 +1,4 @@
+from logging import error
 import os
 import pathlib
 from typing import Optional
@@ -6,19 +7,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from datetime import datetime
 import tempfile
+from starlette.requests import Request
 
 from starlette.responses import Response, StreamingResponse
 
 from utils.transform import FTransform
 
-app = FastAPI()
+app = FastAPI(title="BGM.FUN",
+              description="BGM.FUN back support.",
+              version="0.0.1")
 transform = FTransform()
 temp_dir = tempfile.mktemp()
 os.mkdir(temp_dir)
 
-origins = [
-    "*"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,11 +30,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class Time():
     time = ''
 
     def __init__(self, time: str):
         self.time = time
+
+
+@app.exception_handler(exc_class_or_status_code=404)
+def err_404(request: Request, exc):
+    return JSONResponse({'message': 'resource not found'}, status_code=404)
 
 
 @app.get('/')
@@ -43,12 +51,16 @@ def root_get():
 @app.post('/video2mp3/', response_class=JSONResponse)
 async def video2mp3(file: UploadFile = File(...)):
     temp_file = os.path.join(temp_dir, file.filename)
-    f = open(temp_file, 'wb')
-    f.write(file.file.read())
-    filename = transform.video2mp3(temp_file)
-    if filename is not None:
+    try:
+        f = open(temp_file, 'wb')
+        f.write(file.file.read())
+        filename = transform.video2mp3(temp_file)
         return JSONResponse({'file': filename})
-    return JSONResponse({'message': 'transform video error'}, status_code=500)
+    except error:
+        return JSONResponse({'message': 'transform video error'},
+                            status_code=500)
+    finally:
+        file.file.close()
 
 
 @app.get('/tempfile/')
@@ -68,4 +80,4 @@ def time_get():
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=4000)
