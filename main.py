@@ -1,12 +1,26 @@
-from routes import utils
+from routes import utils, user
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
+from db import database, metadata, engine
+
+metadata.create_all(engine)
 
 app = FastAPI(title="BGM.FUN",
               description="BGM.FUN back support.",
               version="0.0.1")
+
+
+@app.on_event('startup')
+async def startup():
+    await database.connect()
+
+
+@app.on_event('shutdown')
+async def shutdown():
+    await database.disconnect()
+
 
 origins = ["*"]
 
@@ -19,6 +33,7 @@ app.add_middleware(
 )
 
 app.include_router(utils.router)
+app.include_router(user.router)
 
 
 @app.exception_handler(exc_class_or_status_code=404)
@@ -29,4 +44,3 @@ def err_404(request: Request, exc):
 @app.get('/')
 def root():
     return JSONResponse({'message': 'hello world'})
-
